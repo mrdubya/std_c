@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  31st March 2008
+" Last Change:  3rd May 2008
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -141,7 +141,8 @@
 " 13.1 Fix skipping escaped quotes in strings
 " 13.2 Highlight reserved future library names in ()s, macros, and ?:s.
 
-" 14.0 Fix highlighting reserved namespace - E + upper case or digit
+" 14.0 Fix highlighting reserved namespace - E + upper case or digit.
+" 14.1 Fix highlighting 8-bit hex chars in strings.
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -342,7 +343,7 @@ syn match         cOctalCharError   display contained "\\\(2\|3\)\o\{1,2}"
 " Hex characters
 syn match         cHexChar          display contained "\\x\x\+"
 syn cluster       cHexCharContents  contains=cHexChar
-syn match         cHexCharError     display contained "\\x[89a-f]\x\+"
+syn match         cHexCharError     display contained "\\x[89a-fA-F]\x\+"
 if exists("c_warn_8bitchars")
   " Octal and hex chars in integer character contents not portable if top bit set.
   syn cluster     cHexCharContents  add=cHexCharError
