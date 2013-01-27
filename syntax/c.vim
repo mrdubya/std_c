@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  2nd October 2006
+" Last Change:  2nd February 2007
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -139,6 +139,7 @@
 
 " 13.0 Add hex followed by id without ws as error, eg 0x7advance
 " 13.1 Fix skipping escaped quotes in strings
+" 13.2 Highlight reserved future library names in ()s, macros, and ?:s.
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -880,6 +881,10 @@ if (!exists("c_no_ansi") && exists("c_impl_defined")) || !exists("c_no_names")
     syn keyword   cC99Error         cerf cerfc cexp2 cexpm1 clog10 clog1p clog2 clgamme ctgamma
     syn keyword   cC99Error         cerff cerfcf cexp2f cexpm1f clog10f clog1pf clog2f clgammef ctgammaf
     syn keyword   cC99Error         cerfl cerfcl cexp2l cexpm1l clog10l clog1pl clog2l clgammel ctgammal
+    " Highlight future Standard library function names in various containers
+    syn cluster   cParenContents    add=cC99Error
+    syn cluster   cDefineContents   add=cC99Error
+    syn cluster   cConditionalContents add=cC99Error
   endif
 endif
 
