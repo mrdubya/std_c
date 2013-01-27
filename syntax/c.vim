@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  24th June 2006
+" Last Change:  11th September 2006
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -136,6 +136,8 @@
 " 12.3 Add comment folding controllable by c_no_comment_fold.
 " 12.4 Make highlighting of braces in parens as errors controllable.
 " 12.5 Add syntax based folding of statement blocks as per Bram's.
+
+" 13.0 Add hex followed by id without ws as error, eg 0x7advance
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -441,9 +443,11 @@ syn region        cString           start=+L\="+ skip=+\\"+ end=+"+ contains=@cS
 syn case ignore
 " Integer
 syn match         cDecimal          display "\<\d\+\(u\=l\=\|lu\)\>"
+" Catch hex followed by identifier without whitespace - u and l allowed by ...
+syn match         cHexError         display "\<0x\x*[g-z_]\w*"
 " Hex integer
 syn match         cHex              display "\<0x\x\+\(u\=l\=\|lu\)\>"
-" But there is one illegal form of hex ...
+" But there is one other illegal form of hex ...
 syn match         cHexError         display "\<0x\x*e[-+]"
 " Octal integers
 syn match         cOctalZero        display contained "0"
