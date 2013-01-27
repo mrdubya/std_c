@@ -143,6 +143,7 @@
 
 " 14.0 Fix highlighting reserved namespace - E + upper case or digit.
 " 14.1 Fix highlighting 8-bit hex chars in strings.
+" 14.2 Fix highlighting 8-bit octal chars in strings.
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -339,7 +340,7 @@ endif
 " Octal characters
 syn match         cOctalChar        display contained "\\\o\{1,3}"
 syn cluster       cOCtalCharContents contains=cOctalChar
-syn match         cOctalCharError   display contained "\\\(2\|3\)\o\{1,2}"
+syn match         cOctalCharError   display contained "\\\(2\|3\)\o\o"
 " Hex characters
 syn match         cHexChar          display contained "\\x\x\+"
 syn cluster       cHexCharContents  contains=cHexChar
