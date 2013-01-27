@@ -1,4 +1,4 @@
-*std_c.txt*	Standard C Syntax Highlighting, V11.2
+*std_c.txt*	Standard C Syntax Highlighting, V11.4
 
 							*std_c*
 The Standard C syntax file aims to help you develop Standard C programs by
@@ -177,10 +177,14 @@ c_warn_nested_comments	Highlight the start of a C comment within a C comment.
 			don't like this.
 
 Characters~
-c_warn_8bitchars	Highlight characters defined with a hex or octal value
-			with the top bit set as an error.  Since characters
-			can be signed or unsigned it is implementation defined
-			as to how the value is interpreted.
+c_warn_8bitchars	Highlight as an error characters in strings or integer
+			character constants defined with a hex or octal value
+			where the top bit is set.  As the char type can be
+			signed or unsigned according to the compiler, the
+			interpretation of the 8-bit value is not portable.
+			The following example uses a non-portable 8-bit
+			character: >
+			    char ch = '\xa5';
 c_warn_multichar	Highlight multiple character integer constants as
 			errors as the order that the characters are stored in
 			memory is implementation defined.  In the following
@@ -404,7 +408,7 @@ define the colors the use explicitly (see |:highlight|). >
 3. Highlighting source control fields in comments.~
 In this example you want to highlight source control keywords in comments.
 The example assumes a RCS based source control systems where keywords start
-and end with a $ character (e.g. $Date: 2004/10/05 14:45:12 $).  The following
+and end with a $ character (e.g. $Date: 2005/02/24 13:50:30 $).  The following
 lines will highlight RCS fields using the PreProc syntax group. >
 
     syn match	    cRCSField	    contained "\$\u.*\$"

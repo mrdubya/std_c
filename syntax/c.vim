@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  8th August 2004
+" Last Change:  24th February 2005
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -128,6 +128,7 @@
 " 11.1 Fix highlighting nested C comments.
 " 11.2 Fix highlighting of system include file names.
 " 11.3 Argh! - fix highlighting of comments et al in #include statements
+" 11.4 Error highlight character constants in hex/octal with top bit set.
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -318,7 +319,7 @@ if !exists("c_no_names")
 endif
 
 
-" C Character constants
+" C Integer character constants
 " Escaped characters
 syn match         cEscapeCharError  display contained "\\[^'\"?\\abfnrtv]"
 syn match         cEscapeChar       display contained "\\['\"?\\abfnrtv]"
@@ -327,10 +328,19 @@ if exists("c_c_vim_compatible") && exists("c_gnu")
 endif
 " Octal characters
 syn match         cOctalChar        display contained "\\\o\{1,3}"
+syn cluster       cOCtalCharContents contains=cOctalChar
+syn match         cOctalCharError   display contained "\\\(2\|3\)\o\{1,2}"
 " Hex characters
 syn match         cHexChar          display contained "\\x\x\+"
+syn cluster       cHexCharContents  contains=cHexChar
+syn match         cHexCharError     display contained "\\x[89a-f]\x\+"
+if exists("c_warn_8bitchars")
+  " Octal and hex chars in integer character contents not portable if top bit set.
+  syn cluster     cHexCharContents  add=cHexCharError
+  syn cluster     cOctalCharContents add=cOctalCharError
+endif
 " Useful groupings of character types
-syn cluster       cSpecialChar      contains=cEscapeCharError,cEscapeChar,cOctalChar,cHexChar
+syn cluster       cSpecialChar      contains=cEscapeCharError,cEscapeChar,@cOctalCharContents,@cHexCharContents
 syn cluster       cSpecialCharNoError contains=cEscapeChar,cOctalChar,cHexChar
 if (exists("c_c_vim_compatible") || exists("c_C99")) && !exists("c_no_utf")
   " C99 universal chars - hmm, can appear anywhere!
@@ -345,8 +355,8 @@ else
   syn match       cCharacterError   "L\='\(\\.\|.\)\{-2,}'"
 endif
 syn match         cCharacter        "L\='\(\\.\|[^\']\)'" contains=cEscapeCharError,cEscapeChar
-syn match         cCharacter        display "L\='\\x\x\x\='" contains=cHexChar
-syn match         cCharacter        display "L\='\\\o\{1,3}'" contains=cOctalChar
+syn match         cCharacter        display "L\='\\x\x\x\='" contains=@cHexCharContents
+syn match         cCharacter        display "L\='\\\o\{1,3}'" contains=@cOctalCharContents
 syn match         cCharacterError   display "L\='\([^']*$\|'\)"
 syn match         cCharacterNoError display contained "L\='\(\\.\|.\)\{-}'" contains=@cSpecialCharNoError
 
@@ -355,8 +365,6 @@ syn match         cCharacterNoError display contained "L\='\(\\.\|.\)\{-}'" cont
 syn cluster       cStringContents   contains=@cSpecialChar,cPPLineJoin
 if exists("c_warn_8bitchars")
   " Octal and hex chars in strings not portable if top bit set.
-  syn match       cOctalCharError   display contained "\\\(2\|3\)\o\{1,2}"
-  syn match       cHexCharError     display contained "\\x[89a-f]\x\+"
   syn cluster     cStringContents   add=cHexCharError,cOctalCharError
 endif
 syn cluster       cFormat           contains=cEmpty
