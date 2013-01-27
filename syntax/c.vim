@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  2nd February 2007
+" Last Change:  31st March 2008
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -140,6 +140,8 @@
 " 13.0 Add hex followed by id without ws as error, eg 0x7advance
 " 13.1 Fix skipping escaped quotes in strings
 " 13.2 Highlight reserved future library names in ()s, macros, and ?:s.
+
+" 14.0 Fix highlighting reserved namespace - E + upper case or digit
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -849,7 +851,7 @@ if (!exists("c_no_ansi") && exists("c_impl_defined")) || !exists("c_no_names")
   if exists("c_C99")
     syn match     c99Macro          display "\<U\=INT\d\+_C\>"
     syn keyword   c99Macro          INTMAX_C UINTMAX_C
-    syn match     c99Macro          display "\<E@\(\u\|\d\)\w*\>"
+    syn match     c99Macro          display "\<E\(\u\|\d\)\w*\>"
     " printf/scanf format conversion macros
     syn match     c99Macro          display "\(PRI\|SCN\)[diouxX]\(LEAST\|FAST\)\d\+"
     syn match     c99Macro          display "\(PRI\|SCN\)[diouxX]\(MAX\|PTR\)"
