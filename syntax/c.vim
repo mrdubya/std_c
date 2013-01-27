@@ -2,7 +2,7 @@
 " Language:     Standard C (C89, C94, and C99)
 " Maintainer:   Mike Williams <mrw@eandem.co.uk>
 " Filenames:    *.c,*.h
-" Last Change:  11th September 2006
+" Last Change:  2nd October 2006
 " URL:          http://www.eandem.co.uk/~mrw/vim/syntax
 "
 " Notes:
@@ -138,6 +138,7 @@
 " 12.5 Add syntax based folding of statement blocks as per Bram's.
 
 " 13.0 Add hex followed by id without ws as error, eg 0x7advance
+" 13.1 Fix skipping escaped quotes in strings
 
 " TODO
 " 1. Add #if 0/1 comment highlighting
@@ -437,7 +438,7 @@ if !exists("c_no_cformat")
 
   syn cluster     cStringContents   add=@cFormat
 endif
-syn region        cString           start=+L\="+ skip=+\\"+ end=+"+ contains=@cStringContents
+syn region        cString           start=+L\="+ skip=+[^\\]\\"+ end=+"+ contains=@cStringContents
 
 " C numeric constants.
 syn case ignore
@@ -520,7 +521,7 @@ if exists("c_comment_strings")
   " the line as comment again.
   syn match       cCommentSkip      contained "^\s*\*\($\|\s\+\)"
   syn cluster     cCommentStringContents contains=cCharacterNoError,@cSpecialCharNoError,cCommentSkip
-  syn region      cCommentString    contained start=+L\="+ skip=+\\"+ end=+"+ end=+\*\(\\\s*\n\s*\)*\/+me=s-1 contains=@cCommentStringContents
+  syn region      cCommentString    contained start=+L\="+ skip=+[^\\]\\"+ end=+"+ end=+\*\(\\\s*\n\s*\)*\/+me=s-1 contains=@cCommentStringContents
   if exists("c_comment_numbers")
     syn cluster   cCommentGroup     add=@cIntegerNoOctalErr,@cFloat,cFloatError,@cBoolean,@cConstant
   endif
@@ -555,7 +556,7 @@ syn match         cCommentError     "\*/"
 if exists("c_cpp_comments") || (exists("c_C99") && !exists("c_C99_warn"))
   if exists("c_comment_strings")
     " Unfortunately this doesn't very well work for // type of comments :-(
-    syn region    cComment2String   contained start=+L\="+ skip=+\\"+ end=+"+ end="$" contains=@cCommentStringContents
+    syn region    cComment2String   contained start=+L\="+ skip=+[^\\]\\"+ end=+"+ end="$" contains=@cCommentStringContents
   endif
   if exists("c_no_comment_fold")
     syn region    cComment          start="//" skip="\\$" end="$" contains=cComment2String,cCharacterNoError,@cCommentGroup,cPPLineJoin,cPPLineJoinError,@Spell
@@ -603,7 +604,7 @@ syn cluster       cPPCommon         contains=cComment,cCommentError,cPPSpaceErro
 
 " File inclusion
 syn match         cPPInclude        transparent contained "^\s*\(%:\|#\)\s*include\>" contains=cDigraph
-syn region        cPPIncludeFile    contained start=+"+ skip=+\\"+ end=+"+ contains=cPPLineJoin,cPPLineJoinError
+syn region        cPPIncludeFile    contained start=+"+ skip=+[^\\]\\"+ end=+"+ contains=cPPLineJoin,cPPLineJoinError
 syn match         cPPIncludeFile    contained "<[^>]*>"
 syn match         cInclude          display "^\s*\(%:\|#\)\s*include\>\s*.*$" contains=cPPSpaceError,cPPInclude,cPPIncludeFile,@cPPCommon
 
